@@ -1,5 +1,5 @@
 {
-    "name": "arsanchez/laravel-azure-provisioning",
+    "name": "robtrehy/laravel-azure-provisioning",
     "description": "This package adds a SCIM server, specifically designed to work with Microsoft Azure Active Directory, to your Laravel application.",
     "type": "library",
     "license": "MIT",
