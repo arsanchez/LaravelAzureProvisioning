@@ -44,6 +44,5 @@
             "@php ./vendor/bin/testbench package:discover --ansi"
         ]
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }
