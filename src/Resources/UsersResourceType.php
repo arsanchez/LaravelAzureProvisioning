@@ -170,7 +170,7 @@ class UsersResourceType extends ResourceType
                 if (isset($operation['path'])) {
                     $attribute = $this->getMappingForAttribute($operation['path']);
                     if ($attribute === "active" || $operation['path'] === "active") {
-                        $object->{$attribute} = ($operation['value'] === "true") ? '1' : '0';
+                        $object->{$attribute} = ($operation['value'] === "true") ? '1' : '2';
                     } else {
                         $object->{$attribute} = $operation['value'];
                     }
@@ -178,7 +178,7 @@ class UsersResourceType extends ResourceType
                     foreach ($operation['value'] as $key => $value) {
                         $attribute = $this->getMappingForAttribute($key);
                         if ($attribute === "active" || $key === "active") {
-                            $object->{$attribute} = ($operation['value'] === "true") ? '1' : '0';
+                            $object->{$attribute} = ($operation['value'] === "true") ? '1' : '2';
                         } else {
                             $object->{$attribute} = $value;
                         }
