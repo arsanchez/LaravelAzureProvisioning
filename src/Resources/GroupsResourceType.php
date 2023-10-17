@@ -136,9 +136,15 @@ class GroupsResourceType extends ResourceType
             $user = $this->user()->getModel()::find($member['value']);
             $method = $this->getMemberMappingMethod()[0];
 
-            if (method_exists($user, $method)) {
-                call_user_func([$user, $method], $groupName);
+            if ($user) {
+                if (method_exists($user, $method)) {
+                    call_user_func([$user, $method], $groupName);
+                }
+            } else {
+                  // Nothing to do if the user is new
+//                dd($member);
             }
+
         }
     }
 
@@ -148,11 +154,10 @@ class GroupsResourceType extends ResourceType
             if ($member['value']) {
                 $user = $this->user()->getModel()::find($member['value']);
             } else {
-                $user = $this->user()->getModel()::where('id', $member->id)->first();
+                $user = $member;
             }
 
             $method = $this->getMemberMappingMethod()[1];
-
             if ($user && method_exists($user, $method)) {
                 call_user_func([$user, $method], $groupName);
             }
