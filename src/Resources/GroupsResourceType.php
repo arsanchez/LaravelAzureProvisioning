@@ -40,7 +40,7 @@ class GroupsResourceType extends ResourceType
             }
         }
 
-        return $model::findByName($name);
+        return $model::find($name);
     }
 
     public function replaceFromSCIM(array $validatedData, Model $group)
@@ -78,7 +78,7 @@ class GroupsResourceType extends ResourceType
 
         $group->save();
 
-        return $groupModel::findByName($group->name);
+        return $groupModel::find($group->name);
     }
 
     public function patch(array $operation, Model $object)
@@ -98,7 +98,7 @@ class GroupsResourceType extends ResourceType
                         if (isset($operation['value'])) {
                             $this->removeMembers($operation['value'], $object->name);
                         } else {
-                            $this->removeMembers($object->users, $object->name);
+                            $this->removeMembers($object->users(), $object->name);
                         }
                     }
                 } else {
@@ -122,7 +122,7 @@ class GroupsResourceType extends ResourceType
 
         $object->save();
 
-        return $this->getModel()::findByName($object->name);
+        return $this->getModel()::find($object->name);
     }
 
     public function getMemberMappingMethod()
@@ -145,11 +145,15 @@ class GroupsResourceType extends ResourceType
     private function removeMembers($members, $groupName)
     {
         foreach ($members as $member) {
-            $id = ($member['value']) ?: $member->id;
-            $user = $this->user()->getModel()::find($id);
+            if ($member['value']) {
+                $user = $this->user()->getModel()::find($member['value']);
+            } else {
+                $user = $this->user()->getModel()::where('id', $member->id)->first();
+            }
+
             $method = $this->getMemberMappingMethod()[1];
 
-            if (method_exists($user, $method)) {
+            if ($user && method_exists($user, $method)) {
                 call_user_func([$user, $method], $groupName);
             }
         }

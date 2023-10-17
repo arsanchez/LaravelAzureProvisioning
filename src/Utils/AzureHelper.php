@@ -325,7 +325,7 @@ class AzureHelper
                 }
             } elseif ($key === "members") {
                 $result[$key] = [];
-                foreach ($object->users as $member) {
+                foreach ($object->users() as $member) {
                     $result[$key][] = self::objectToSCIMArray(
                         $member,
                         new UsersResourceType('Users', config('azureprovisioning.Users'))
