@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use RobTrehy\LaravelAzureProvisioning\Exceptions\AzureProvisioningException;
 
+
 class GroupsResourceType extends ResourceType
 {
 
@@ -16,6 +17,7 @@ class GroupsResourceType extends ResourceType
     {
         $model = $this->getModel();
         $name = ($validatedData['displayname']) ?: null;
+        $externalId = ($validatedData['externalid']) ?: null;
 
         if ($name === null) {
             // TODO: Make this the correct exception message and code
@@ -23,7 +25,7 @@ class GroupsResourceType extends ResourceType
         }
 
         try {
-            $model::findOrCreate($name);
+            $model::findOrCreate($name, $externalId);
         } catch (QueryException $exception) {
             // TODO: Handle this better
             throw $exception;
@@ -40,7 +42,7 @@ class GroupsResourceType extends ResourceType
             }
         }
 
-        return $model::find($name);
+        return $model::where('group_name', '=', $name)->get()->first();
     }
 
     public function replaceFromSCIM(array $validatedData, Model $group)

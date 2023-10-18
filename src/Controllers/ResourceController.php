@@ -14,11 +14,14 @@ use RobTrehy\LaravelAzureProvisioning\Utils\SCIMConstantsV2;
 use Tmilos\ScimFilterParser\Error\FilterException;
 use Tmilos\ScimFilterParser\Parser;
 use Tmilos\ScimFilterParser\Mode;
+use Illuminate\Support\Facades\Log;
 
 class ResourceController extends Controller
 {
     public function create(Request $request, ResourceType $resourceType)
     {
+        Log::debug($request->url());
+        Log::debug($request);
         $resourceObject = $this->createObject($request, $resourceType);
 
         // event(new Create($resourceObject, $resourceType));
@@ -28,6 +31,9 @@ class ResourceController extends Controller
 
     public function show(Request $request, ResourceType $resourceType, Model $resourceObject)
     {
+        Log::debug($request->url());
+        Log::debug($request);
+
         // event(new Get($resourceObject, $resourceType));
 
         return AzureHelper::objectToSCIMResponse(
@@ -40,6 +46,9 @@ class ResourceController extends Controller
 
     public function delete(Request $request, ResourceType $resourceType, Model $resourceObject)
     {
+        Log::debug($request->url());
+        Log::debug($request);
+
         $resourceObject->delete();
 
         // event(new Delete($resourceObject, $resourceType));
@@ -49,6 +58,9 @@ class ResourceController extends Controller
 
     public function update(Request $request, ResourceType $resourceType, Model $resourceObject)
     {
+        Log::debug($request->url());
+        Log::debug($request);
+
         $input = $request->input();
 
         if (!self::isAllowed($request, 'PATCH', $input, $resourceType, $resourceObject)) {

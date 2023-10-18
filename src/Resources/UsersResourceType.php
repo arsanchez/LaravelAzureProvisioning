@@ -5,7 +5,9 @@ namespace RobTrehy\LaravelAzureProvisioning\Resources;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use RobTrehy\LaravelAzureProvisioning\Exceptions\AzureProvisioningException;
+use Symfony\Component\ErrorHandler\Debug;
 
 class UsersResourceType extends ResourceType
 {
@@ -146,14 +148,27 @@ class UsersResourceType extends ResourceType
             case "add":
                 if (isset($operation['path'])) {
                     $attribute = $this->getMappingForAttribute($operation['path']);
-                    foreach ($operation['value'] as $value) {
-                        $object->{$attribute}->add($value);
+
+                    if (!$attribute) {
+                        break;
                     }
+                    if (is_array($operation['value'])) {
+                        foreach ($operation['value'] as $value) {
+                            $object->{$attribute}->add($value);
+                        }
+                    } else {
+                        if ($attribute === "accountEnabled" || $operation['path'] === "accountEnabled") {
+                            $object->{$attribute} = ($operation['value'] === "True") ? '1' : '2';
+                        } else {
+                            $object->{$attribute} = $operation['value'];
+                        }
+                    }
+
                 } else {
                     foreach ($operation['value'] as $key => $value) {
                         $attribute = $this->getMappingForAttribute($key);
                         foreach ($value as $v) {
-                            $object->{$attribute}->add($v);
+                            $object->{$attribute} = $v;
                         }
                     }
                 }
@@ -169,7 +184,11 @@ class UsersResourceType extends ResourceType
             case "replace":
                 if (isset($operation['path'])) {
                     $attribute = $this->getMappingForAttribute($operation['path']);
-                    if ($attribute === "active" || $operation['path'] === "active") {
+                    if (!$attribute) {
+                        break;
+                    }
+
+                    if ($attribute === "accountenabled" || $operation['path'] === "accountenabled") {
                         $object->{$attribute} = ($operation['value'] === "true") ? '1' : '2';
                     } else {
                         $object->{$attribute} = $operation['value'];
@@ -177,7 +196,7 @@ class UsersResourceType extends ResourceType
                 } else {
                     foreach ($operation['value'] as $key => $value) {
                         $attribute = $this->getMappingForAttribute($key);
-                        if ($attribute === "active" || $key === "active") {
+                        if ($attribute === "accountenabled" || $key === "accountenabled") {
                             $object->{$attribute} = ($operation['value'] === "true") ? '1' : '2';
                         } else {
                             $object->{$attribute} = $value;
