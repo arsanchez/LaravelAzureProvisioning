@@ -8,6 +8,8 @@ return [
      * Set the prefix for the SCIM service routes
      */
     'routePrefix' => 'scim/v2.0',
+    'routeMiddleware' => [
+    ],
 
     /**
      * User Resource Type settings

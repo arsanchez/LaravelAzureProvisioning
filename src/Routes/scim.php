@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
         'prefix' => config('azureprovisioning.routePrefix'),
-        'middleware' => [SubstituteBindings::class]
+        'middleware' => array_merge([SubstituteBindings::class], config('azureprovisioning.routeMiddleware'))
     ], function () {
         Route::get('/ServiceProviderConfig', [ServiceProviderController::class, 'index']);
         Route::get('/Schemas', [SchemaController::class, 'index']);
