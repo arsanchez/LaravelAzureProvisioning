@@ -124,7 +124,7 @@ class GroupsResourceType extends ResourceType
 
         $object->save();
 
-        return $this->getModel()::find($object->name);
+        return $this->getModel()::find($object->group_id);
     }
 
     public function getMemberMappingMethod()
